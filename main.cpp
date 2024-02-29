@@ -7,47 +7,67 @@
 
 
 using namespace sl;
+using namespace std;
 
 int main() {
-
-	
-    // Create a ZED camera object
     Camera zed;
 
+    // Set configuration parameters
+    InitParameters init_parameters;
+    init_parameters.camera_resolution = RESOLUTION::AUTO; // Use HD720 opr HD1200 video mode, depending on camera type.
+    init_parameters.camera_fps = 30; // Set fps at 30
+
     // Open the camera
-    ERROR_CODE returned_state = zed.open();
+    auto returned_state = zed.open(init_parameters);
     if (returned_state != ERROR_CODE::SUCCESS) {
-        std::cout << "Error " << returned_state << ", exit program.\n";
+        cout << "Error " << returned_state << ", exit program." << endl;
         return EXIT_FAILURE;
     }
 
-    // Get camera information (ZED serial number)
-    auto camera_infos = zed.getCameraInformation();
-    printf("Hello! This is my serial number: %d\n", camera_infos.serial_number);
+    // Capture 50 frames and stop
+    int i = 0;
+    sl::Mat image;
+    while (i < 50) {
+        // Grab an image
+        returned_state = zed.grab();
+        // A new image is available if grab() returns ERROR_CODE::SUCCESS
+        if (returned_state == ERROR_CODE::SUCCESS) {
+
+            // Get the left image
+            zed.retrieveImage(image, VIEW::LEFT);
+			cv::Mat cvMat = MatHelper::slMat2cvMat(image);
+			cv::imshow("ZED", cvMat);
+			cv::waitKey();
+            
+            // Display the image resolution and its acquisition timestamp
+            cout<<"Image resolution: "<< image.getWidth()<<"x"<<image.getHeight() <<" || Image timestamp: "<<image.timestamp.data_ns<<endl;
+            i++;
+        }
+    }
 
     // Close the camera
     zed.close();
-    return EXIT_SUCCESS;
+    return EXIT_SUCCESS;;
 
-	cv::Mat image = cv::imread("../dog.jpeg");
 
-	cv::imshow("dawg", image);
-	cv::waitKey();
+	//cv::Mat image = cv::imread("../dog.jpeg")// Create a ZED camera object
+	//cv::imshow("dawg", image);
+	//cv::waitKey();
 
-	cv::Mat grayScale{image.rows, image.cols, 0, cv::Scalar{0,0,0}};
-	cv::cvtColor(image, grayScale, 6);
+	//cv::Mat grayScale{image.rows, image.cols, 0, cv::Scalar{0,0,0}};
+	//cv::cvtColor(image, grayScale, 6);
 
-	cv::imshow("gray", grayScale);
-	cv::waitKey();
+	//cv::imshow("gray", grayScale);
+	//cv::waitKey();
 
-	cv::Mat grad = Gradient{grayScale}.getGradient();
-	std::cout << grad.depth() << std::endl;
-	MatHelper::normalizeImage(grad, static_cast<uchar>(0), static_cast<uchar>(255));
+	//cv::Mat grad = Gradient{grayScale}.getGradient();
+	//std::cout << grad.depth() << std::endl;
+	//MatHelper::normalizeImage(grad, static_cast<uchar>(0), static_cast<uchar>(255));
 
-	cv::imshow("DOG IMAGE", grad);
-	cv::waitKey();
-	std::cout << "Hello, World" << std::endl;
-	return 0;
+	//cv::imshow("DOG IMAGE", grad);
+	//cv::waitKey();
+	//std::cout << "Hello, World" << std::endl;
+	//return 0;
 }
 
 
