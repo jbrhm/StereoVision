@@ -1,5 +1,4 @@
 #include "Gradient.hpp"
-#include <cmath>
 
 std::vector<double> const Gradient::sobelFilterX = 	{
 													1,0,-1,
@@ -32,6 +31,10 @@ Gradient::Gradient(cv::Mat const& regularImage){
 
 		}
 	}
+}
+
+uchar Gradient::at(int row, int col){
+	return mGradientMat.at<uchar>(row, col);
 }
 
 cv::Mat& Gradient::getGradient(){

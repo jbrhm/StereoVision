@@ -20,8 +20,9 @@ link_directories(${CUDA_LIBRARY_DIRS})
 set( Gradient Gradient.cpp Gradient.hpp )
 set( MatHelper MatHelper.hpp )
 set( Includes OpencvIncludes.hpp ZEDIncludes.hpp )
+set( Cost Cost.hpp Cost.cpp )
 
-add_executable( stereo main.cpp ${Gradient} ${MatHelper} )
+add_executable( stereo main.cpp ${Gradient} ${MatHelper} ${Cost} )
 
 #LINK AGAINST OPENCV lib
 target_link_libraries( stereo ${OpenCV_LIBS})

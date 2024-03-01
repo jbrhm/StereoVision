@@ -27,7 +27,8 @@ int main() {
 
     // Capture 50 frames and stop
     int i = 0;
-    sl::Mat image;
+    sl::Mat rightImage;
+	sl::Mat leftImage;
     while (true) {
         // Grab an image
         returned_state = zed.grab();
@@ -35,12 +36,26 @@ int main() {
         if (returned_state == ERROR_CODE::SUCCESS) {
 
             // Get the left image
-			zed.retrieveImage(image, VIEW::LEFT);
-			cv::Mat cvImage = MatHelper::slMat2cvMat(image);
-			cv::Mat gray;
-			cv::cvtColor(cvImage, gray, 6);
-			cv::Mat grayScale = Gradient(gray).getGradient();
-            // Display the image resolution and its acquisition timestamp
+			zed.retrieveImage(leftImage, VIEW::LEFT);
+			zed.retrieveImage(rightImage, VIEW::RIGHT);
+
+			cv::Mat cvImageLeft = MatHelper::slMat2cvMat(leftImage);
+			cv::Mat cvImageRight = MatHelper::slMat2cvMat(rightImage);
+
+			cv::Mat grayLeft;
+			cv::Mat grayRight;
+			cv::cvtColor(cvImageLeft, grayLeft, 6);
+			cv::cvtColor(cvImageRight, grayRight, 6);
+
+			//Show Images
+			cv::Mat grayScaleLeft = Gradient(grayLeft).getGradient();
+			cv::Mat grayScaleRight = Gradient(grayRight).getGradient();
+			cv::imshow("ZED LEFT", grayScaleLeft);
+			cv::waitKey();
+			cv::imshow("ZED RIGHT", grayScaleRight);
+			cv::waitKey();
+
+
 			i++;
         	std::cout << "NUM INTERATIONS: " << i << std::endl;
 		}
