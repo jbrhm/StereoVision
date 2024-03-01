@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <vector>
 #include <iostream>
 #include <cstddef>
@@ -17,7 +18,14 @@ private:
 
 	int mMaxDisparity;
 
+	int mP1 = 1000;
+	int mP2 = 10000;
+
 	std::vector<cv::Mat> mCostMatrices; 
+
+	uint16_t getMinInDir(int row, int col, int i, int j);
+
+	uint16_t findBestOption(int row, int col, int dis, int i, int j);
 
 public:
 	Cost(Gradient left, Gradient right, int maxDisparity);

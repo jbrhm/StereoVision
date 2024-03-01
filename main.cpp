@@ -4,6 +4,7 @@
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/highgui.hpp>
 #include "Gradient.hpp"
+#include "Cost.hpp"
 #include "MatHelper.hpp"
 #include "ZEDIncludes.hpp"
 
@@ -55,6 +56,7 @@ int main() {
 			cv::imshow("ZED RIGHT", grayScaleRight);
 			cv::waitKey();
 
+			Cost cost{grayScaleLeft, grayScaleRight, 16};
 
 			i++;
         	std::cout << "NUM INTERATIONS: " << i << std::endl;
