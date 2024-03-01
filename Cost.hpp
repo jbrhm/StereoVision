@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <opencv4/opencv2/core.hpp>
 #include <vector>
 #include <iostream>
 #include <cstddef>
@@ -18,10 +19,13 @@ private:
 
 	int mMaxDisparity;
 
-	int mP1 = 1000;
-	int mP2 = 10000;
+	int mP1 = 15;
+	int mP2 = 1000;
 
 	std::vector<cv::Mat> mCostMatrices; 
+
+
+	cv::Mat mDepthMatrix;
 
 	uint16_t getMinInDir(int row, int col, int i, int j);
 

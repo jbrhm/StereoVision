@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <opencv4/opencv2/core.hpp>
 #include <unistd.h>
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/highgui.hpp>
@@ -16,7 +17,7 @@ int main() {
 
     // Set configuration parameters
     InitParameters init_parameters;
-    init_parameters.camera_resolution = RESOLUTION::AUTO; // Use HD720 opr HD1200 video mode, depending on camera type.
+    init_parameters.camera_resolution = RESOLUTION::VGA; // iUse HD720 opr HD1200 video mode, depending on camera type.
     init_parameters.camera_fps = 30; // Set fps at 30
 
     // Open the camera
@@ -40,8 +41,14 @@ int main() {
 			zed.retrieveImage(leftImage, VIEW::LEFT);
 			zed.retrieveImage(rightImage, VIEW::RIGHT);
 
-			cv::Mat cvImageLeft = MatHelper::slMat2cvMat(leftImage);
-			cv::Mat cvImageRight = MatHelper::slMat2cvMat(rightImage);
+			cv::Mat cvImageLeftPre = MatHelper::slMat2cvMat(leftImage);
+			cv::Mat cvImageRightPre = MatHelper::slMat2cvMat(rightImage);
+
+			cv::Mat cvImageLeft;
+			cv::Mat cvImageRight;
+
+			cv::resize(cvImageLeftPre, cvImageLeft, cv::Size(), 0.1, 0.1);
+			cv::resize(cvImageRightPre, cvImageRight, cv::Size(), 0.1, 0.1);
 
 			cv::Mat grayLeft;
 			cv::Mat grayRight;
@@ -56,8 +63,11 @@ int main() {
 			cv::imshow("ZED RIGHT", grayScaleRight);
 			cv::waitKey();
 
-			Cost cost{grayScaleLeft, grayScaleRight, 16};
-
+			Cost cost{grayScaleLeft, grayScaleRight, 200};
+			cv::Mat depthMatrix = cost.getCost();
+			cv::imshow("Cost Matrix", depthMatrix);
+			cv::waitKey();
+			
 			i++;
         	std::cout << "NUM INTERATIONS: " << i << std::endl;
 		}

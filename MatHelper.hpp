@@ -23,7 +23,7 @@ public:
 
 		for(int row = 0; row < mat.rows; row++){
 			for(int col = 0; col < mat.cols; col++){
-				mat.at<uchar>(row, col) = static_cast<double>(max) * (mat.at<uchar>(row, col) - minSeen) / (static_cast<double>(max) - min);
+				mat.at<uchar>(row, col) = static_cast<double>(max-min) * (mat.at<uchar>(row, col) - minSeen) / (static_cast<double>(maxSeen) - minSeen);
 			}
 		}
 	}
