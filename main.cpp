@@ -63,7 +63,7 @@ int main() {
 			cv::imshow("ZED RIGHT", grayScaleRight);
 			cv::waitKey();
 
-			Cost cost{grayScaleLeft, grayScaleRight, 200};
+			Cost cost{grayScaleLeft, grayScaleRight, 10};
 			cv::Mat depthMatrix = cost.getCost();
 			cv::imshow("Cost Matrix", depthMatrix);
 			cv::waitKey();

@@ -33,8 +33,8 @@ Gradient::Gradient(cv::Mat const& regularImage){
 	}
 }
 
-uchar Gradient::at(int row, int col){
-	return mGradientMat.at<uchar>(row, col);
+double Gradient::at(int row, int col){
+	return static_cast<double>(mGradientMat.at<uchar>(row, col));
 }
 
 cv::Mat& Gradient::getGradient(){

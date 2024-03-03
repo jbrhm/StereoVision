@@ -21,7 +21,7 @@ private:
 public:
 	Gradient(cv::Mat const& regularImage);
 
-	uchar at(int row, int col);
+	double at(int row, int col);
 
 	cv::Mat& getGradient();
 };

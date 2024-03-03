@@ -19,17 +19,17 @@ private:
 
 	int mMaxDisparity;
 
-	int mP1 = 15;
-	int mP2 = 1000;
+	int mP1 = 5;
+	int mP2 = 25;
 
 	std::vector<cv::Mat> mCostMatrices; 
 
 
 	cv::Mat mDepthMatrix;
 
-	uint16_t getMinInDir(int row, int col, int i, int j);
+	double getMinInDir(int row, int col, int i, int j);
 
-	uint16_t findBestOption(int row, int col, int dis, int i, int j);
+	double findBestOption(int row, int col, int dis, int i, int j);
 
 public:
 	Cost(Gradient left, Gradient right, int maxDisparity);
