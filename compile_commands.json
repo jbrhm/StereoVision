@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/home/john/Desktop/Personal_Projects/stereo",
+  "command": "/usr/bin/c++  -I/usr/local/cuda-12.3/include -I/usr/local/zed/include -isystem /usr/include/opencv4  -o CMakeFiles/stereo.dir/main.cpp.o -c /home/john/Desktop/Personal_Projects/stereo/main.cpp",
+  "file": "/home/john/Desktop/Personal_Projects/stereo/main.cpp",
+  "output": "CMakeFiles/stereo.dir/main.cpp.o"
+},
+{
+  "directory": "/home/john/Desktop/Personal_Projects/stereo",
+  "command": "/usr/bin/c++  -I/usr/local/cuda-12.3/include -I/usr/local/zed/include -isystem /usr/include/opencv4  -o CMakeFiles/stereo.dir/Gradient.cpp.o -c /home/john/Desktop/Personal_Projects/stereo/Gradient.cpp",
+  "file": "/home/john/Desktop/Personal_Projects/stereo/Gradient.cpp",
+  "output": "CMakeFiles/stereo.dir/Gradient.cpp.o"
+},
+{
+  "directory": "/home/john/Desktop/Personal_Projects/stereo",
+  "command": "/usr/bin/c++  -I/usr/local/cuda-12.3/include -I/usr/local/zed/include -isystem /usr/include/opencv4  -o CMakeFiles/stereo.dir/Cost.cpp.o -c /home/john/Desktop/Personal_Projects/stereo/Cost.cpp",
+  "file": "/home/john/Desktop/Personal_Projects/stereo/Cost.cpp",
+  "output": "CMakeFiles/stereo.dir/Cost.cpp.o"
+}
+]
