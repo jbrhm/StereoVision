@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project( stereo )
+add_compile_options( -O3 )
+set( CMAKE_BUILD_TYPE "Release" )
+message( ${CMAKE_BUILD_TYPE} )
 
 #Include OpenCV
 find_package( OpenCV REQUIRED )

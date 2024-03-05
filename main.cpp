@@ -40,7 +40,7 @@ int main() {
             // Get the left image
 			zed.retrieveImage(leftImage, VIEW::LEFT);
 			zed.retrieveImage(rightImage, VIEW::RIGHT);
-
+			
 			cv::Mat cvImageLeftPre = MatHelper::slMat2cvMat(leftImage);
 			cv::Mat cvImageRightPre = MatHelper::slMat2cvMat(rightImage);
 
