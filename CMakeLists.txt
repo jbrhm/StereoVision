@@ -19,6 +19,9 @@ include_directories(${ZED_INCLUDE_DIRS})
 link_directories(${ZED_LIBRARY_DIR})
 link_directories(${CUDA_LIBRARY_DIRS})
 
+#Build with Eigen
+find_package( Eigen3 3.3 REQUIRED NO_MODULE )
+
 #src
 set( Gradient Gradient.cpp Gradient.hpp )
 set( MatHelper MatHelper.hpp )
@@ -38,3 +41,6 @@ else()
 endif()
 
 TARGET_LINK_LIBRARIES( stereo ${ZED_LIBS})
+
+#LINK AGAINST Eigen3
+target_link_libraries( stereo Eigen3::Eigen )
