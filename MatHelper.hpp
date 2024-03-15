@@ -1,6 +1,7 @@
 #include "OpencvIncludes.hpp"
 #include "ZEDIncludes.hpp"
 #include <exception>
+#include <opencv2/core/matx.hpp>
 #include <stdexcept>
 #include <cuchar>
 
@@ -45,9 +46,23 @@ public:
 		return cv_type;
 	}
 
+	inline static std::vector<cv::Mat> getRGBMatrices(sl::Mat& input){
+		cv::Mat zedInput = slMat2cvMat(input);
+		std::vector<cv::Mat> channels;
+		if(input.getChannels() != 3) throw std::runtime_error("Matrix is not size 3");
+		for(int i = 0; i < 3; i++){
+			cv::Mat temp(input.getHeight(), input.getWidth(), 0, cv::Scalar{0,0,0});
+			for(int y = 0; y < input.getHeight(); y++){
+				for(int x = 0; x < input.getWidth(); x++){
+					temp.at<uchar>(y,x) = zedInput.at<cv::Vec3b>(y,x)[i];
+				}
+			}
+			channels.push_back(temp);
+		}
+		return channels;
+	}
+
 	inline static cv::Mat slMat2cvMat(sl::Mat& input) {
-		// Since cv::Mat data requires a uchar* pointer, we get the uchar1 pointer from sl::Mat (getPtr<T>())
-		// cv::Mat and sl::Mat will share a single memory structure
 		return cv::Mat(input.getHeight(), input.getWidth(), getOCVtype(input.getDataType()), input.getPtr<sl::uchar1>(sl::MEM::CPU), input.getStepBytes(sl::MEM::CPU));
 	}
 };
