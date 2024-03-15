@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <opencv4/opencv2/core.hpp>
+#include <stdexcept>
 #include <unistd.h>
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/highgui.hpp>
@@ -16,35 +17,37 @@ using namespace sl;
 typedef Eigen::Matrix<double, 9, 1> Vector9d;
 typedef Eigen::Matrix<double, 9, 8> Essential;
 
-Vector9d calculateYVector(Eigen::Vector2d y, Eigen::Vector2d yPrime){
-	Vector9d y9;
-	y9 << yPrime.x() * y.x(),
-	   	  yPrime.x() * y.y(),
-		  yPrime.x(),
-		  yPrime.y() * y.x(),
-		  yPrime.y() * y.y(),
-		  yPrime.y(),
-		  y.x(),
-		  y.y(),
-		  1.0;
-	return y9;
+Eigen::MatrixXd calcYMatrix(std::vector<Eigen::Vector2d> const& src, std::vector<Eigen::Vector2d> const& dst){
+	if(src.size() != dst.size()) throw std::runtime_error("Cannot Computer Least Squares on Different sized Vectors");
+	Eigen::MatrixXd yMatrix;
+	yMatrix.resize(2 * src.size(), 4);
+	for(int i = 0; i < src.size(); i++){
+		yMatrix(2 * i, 0) = src.at(i).x();
+		yMatrix(2 * i, 1) = 1;
+		yMatrix(2 * i, 2) = 0;
+		yMatrix(2 * i, 3) = 0;
+		yMatrix(2 * i + 1, 0) = 0;
+		yMatrix(2 * i + 1, 1) = 0;
+		yMatrix(2 * i + 1, 2) = src.at(i).y();
+		yMatrix(2 * i + 1, 3) = 1;
+	}
+	return yMatrix;
 }
 
-Essential calcYMatrix(std::vector<Eigen::Vector2d> const& src, std::vector<Eigen::Vector2d> const& dst){
-	Essential yMatrix;
-	assert(src.size() == 8);
-	assert(dst.size() == 8);
-
-	for(int i = 0; i < 8; i++){
-		yMatrix.col(i) = calculateYVector(src.at(i), dst.at(i));
+Eigen::MatrixXd calcDestVector(std::vector<Eigen::Vector2d> const& src, std::vector<Eigen::Vector2d> const& dst){
+	if(src.size() != dst.size()) throw std::runtime_error("Cannot Computer Least Squares on Different sized Vectors");
+	Eigen::MatrixXd yMatrix;
+	yMatrix.resize(2 * src.size(), 1);
+	for(int i = 0; i < src.size(); i++){
+		yMatrix(2 * i, 0) = dst.at(i).x();
+		yMatrix(2 * i + 1, 0) = dst.at(i).y();
 	}
-
 	return yMatrix;
 }
 
 int main() {
 	std::vector<Eigen::Vector2d> src	{
-											{1,1},
+											{2,1},
 											{1,2},
 											{1,3},
 											{1,4},
@@ -55,23 +58,21 @@ int main() {
 										};	
 
 	std::vector<Eigen::Vector2d> dest	{
-											{-1,1},
-											{-2,1},
-											{-3,1},
-											{-4,1},
-											{-5,1},
-											{-6,1},
-											{-7,1},
-											{-8,1}
+											{3,1},
+											{2,2},
+											{2,3},
+											{2,4},
+											{2,5},
+											{2,6},
+											{2,7},
+											{2,8}
 										};	
 
-	Essential A = calcYMatrix(src, dest);
-	Eigen::FullPivLU<Eigen::MatrixXd> lu(A.transpose());
-	Eigen::MatrixXd A_null_space = lu.kernel();
-	std::cout << A_null_space << std::endl;
+	Eigen::MatrixXd A = calcYMatrix(src, dest);
+	Eigen::MatrixXd b = calcDestVector(src, dest);
 
-	Vector9d b;
-	b << 0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001;
+	std::cout << "A: " << std::endl << A << std::endl;
+	std::cout << "b: " << std::endl << b << std::endl;
 
 	std::cout << "The solution using normal equations is:\n"
 		 << (A.transpose() * A).ldlt().solve(A.transpose() * b) << std::endl;
